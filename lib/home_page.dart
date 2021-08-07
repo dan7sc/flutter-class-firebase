@@ -11,12 +11,35 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Future<void> getTransactions() async {
     try {
+      // REALTIME
       FirebaseFirestore.instance
           .collection("/transactions")
           .snapshots()
           .listen((event) {
-              print("Received event: ${event.docs.map((e) => e.data())}");
-          });
+        print("Received event: ${event.docs.map((e) => e.data())}");
+      });
+
+      // CREATE
+      FirebaseFirestore.instance
+          .collection("/transactions")
+          .add({"type": "expense"});
+
+      // UPDATE
+      FirebaseFirestore.instance
+          .collection("/transactions")
+          .doc("WNwApIU7PzCRHUQ7pKqM")
+          .set({"value": 400}, SetOptions(merge: true));
+
+      // DELETE
+      FirebaseFirestore.instance
+          .collection("/transactions")
+          .doc("WNwApIU7PzCRHUQ7pKqM")
+          .delete();
+
+      // READ
+      final response =
+          await FirebaseFirestore.instance.collection("/transactions").get();
+      print(response.docs.map((e) => e.data()).toList());
     } catch (e) {
       print("Error: $e");
     }
