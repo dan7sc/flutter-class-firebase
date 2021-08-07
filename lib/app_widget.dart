@@ -1,4 +1,4 @@
-import 'package:class_firebase/home_page.dart';
+import 'package:class_firebase/home/home_page.dart';
 import 'package:flutter/material.dart';
 
 class AppWidget extends StatelessWidget {

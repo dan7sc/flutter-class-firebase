@@ -27,13 +27,13 @@ class _HomePageState extends State<HomePage> {
       // UPDATE
       FirebaseFirestore.instance
           .collection("/transactions")
-          .doc("WNwApIU7PzCRHUQ7pKqM")
+          .doc("i1IGSJiy3VcEHbi5Ce1f")
           .set({"value": 400}, SetOptions(merge: true));
 
       // DELETE
       FirebaseFirestore.instance
           .collection("/transactions")
-          .doc("WNwApIU7PzCRHUQ7pKqM")
+          .doc("0LdxuzNjQRqdYiuICJtz")
           .delete();
 
       // READ
