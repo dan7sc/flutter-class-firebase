@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -8,6 +9,17 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  Future<void> login() async {
+    try {
+      final response = await FirebaseAuth.instance.signInWithEmailAndPassword(
+          email: "test@email.com", password: "asdfjk");
+      final user = response.user;
+      print('User: $user');
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -15,7 +27,9 @@ class _LoginPageState extends State<LoginPage> {
       body: Center(
         child: TextButton(
           child: Text('Login'),
-          onPressed: () {},
+          onPressed: () {
+            login();
+          },
         ),
       ),
     );
