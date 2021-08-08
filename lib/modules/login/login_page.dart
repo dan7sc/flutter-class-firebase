@@ -15,9 +15,9 @@ class _LoginPageState extends State<LoginPage> {
       final response = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: "test@email.com", password: "asdfjk");
       final user = response.user;
-      print('User: $user');
+      print('SignInUser: $user');
     } catch (e) {
-      print('Error: $e');
+      print('ErrorSignInUser: $e');
     }
   }
 
@@ -31,9 +31,9 @@ class _LoginPageState extends State<LoginPage> {
           .collection("/users")
           .doc(user!.uid)
           .set({"email": user.email});
-      print('User: $user');
+      print('CreateUser: $user');
     } catch (e) {
-      print('Error: $e');
+      print('ErrorCreateUser: $e');
     }
   }
 
