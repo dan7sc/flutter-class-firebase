@@ -37,6 +37,20 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  Future<bool> containsEmail(String email) async {
+    try {
+      final response = await FirebaseFirestore.instance
+          .collection("/users")
+          .where("email", isEqualTo: email)
+          .get();
+      print('ContainsEmail: ${response.docs.length > 0}');
+      return response.docs.length > 0;
+    } catch (e) {
+      print('ErrorCreateUser: $e');
+      throw e;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,7 +70,13 @@ class _LoginPageState extends State<LoginPage> {
               onPressed: () {
                 createAccount();
               },
-            )
+            ),
+            TextButton(
+              child: Text('Verificar se email existe'),
+              onPressed: () async {
+                await containsEmail("test2@email.com");
+              },
+            ),
           ],
         ),
       ),
