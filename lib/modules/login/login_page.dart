@@ -30,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
       await FirebaseFirestore.instance
           .collection("/users")
           .doc(user!.uid)
-          .set({"email": user.email});
+          .set({"email": user.email, "created": FieldValue.serverTimestamp()});
       print('CreateUser: $user');
     } catch (e) {
       print('ErrorCreateUser: $e');
@@ -42,11 +42,12 @@ class _LoginPageState extends State<LoginPage> {
       final response = await FirebaseFirestore.instance
           .collection("/users")
           .where("email", isEqualTo: email)
+          .where("created", isGreaterThanOrEqualTo: DateTime(2021, 7, 29))
           .get();
       print('ContainsEmail: ${response.docs.length > 0}');
       return response.docs.length > 0;
     } catch (e) {
-      print('ErrorCreateUser: $e');
+      print('ErrorContainsEmail: $e');
       throw e;
     }
   }
