@@ -10,11 +10,13 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  User? user;
+
   Future<void> login() async {
     try {
       final response = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: "test@email.com", password: "asdfjk");
-      final user = response.user;
+      user = response.user;
       print('SignInUser: $user');
     } catch (e) {
       print('ErrorSignInUser: $e');
@@ -52,31 +54,85 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  Future<bool> createTransaction() async {
+    try {
+      final response = await FirebaseFirestore.instance
+          .collection("/transactions")
+          .add({
+        "userId": user?.uid,
+        "value": 1000,
+        "type": "in",
+        "createdAt": FieldValue.serverTimestamp()
+      });
+      print('CreateTransaction: $response.docs');
+      return true;
+    } catch (e) {
+      print('ErrorCreateTransaction: $e');
+      throw e;
+    }
+  }
+
+  Future<bool> transactionsByUser() async {
+    try {
+      final response = await FirebaseFirestore.instance
+          .collection("/transactions")
+          .where("userId", isEqualTo: user?.uid)
+          .where("type", isEqualTo: "in")
+          .get();
+      print('TransactionsByUser: ${response.docs.map(((e) => e.data()))}');
+      return true;
+    } catch (e) {
+      print('ErrorTransactionsByUser: $e');
+      throw e;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
       body: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
+        child: Column(
           children: [
-            TextButton(
-              child: Text('Login'),
-              onPressed: () {
-                login();
-              },
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  child: Text('Login'),
+                  onPressed: () {
+                    login();
+                  },
+                ),
+                TextButton(
+                  child: Text('Criar conta'),
+                  onPressed: () {
+                    createAccount();
+                  },
+                ),
+                TextButton(
+                  child: Text('Verificar se email existe'),
+                  onPressed: () async {
+                    await containsEmail("test2@email.com");
+                  },
+                ),
+              ],
             ),
-            TextButton(
-              child: Text('Criar conta'),
-              onPressed: () {
-                createAccount();
-              },
-            ),
-            TextButton(
-              child: Text('Verificar se email existe'),
-              onPressed: () async {
-                await containsEmail("test2@email.com");
-              },
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                TextButton(
+                  child: Text('Criar transactions'),
+                  onPressed: () {
+                    createTransaction();
+                  },
+                ),
+                TextButton(
+                  child: Text('Busca transactions de usuario'),
+                  onPressed: () {
+                    transactionsByUser();
+                  },
+                ),
+              ],
             ),
           ],
         ),
