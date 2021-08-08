@@ -20,16 +20,39 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
+  Future<void> createAccount() async {
+    try {
+      final response = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+              email: "test2@email.com", password: "asdfjk");
+      final user = response.user;
+      print('User: $user');
+    } catch (e) {
+      print('Error: $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(),
       body: Center(
-        child: TextButton(
-          child: Text('Login'),
-          onPressed: () {
-            login();
-          },
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            TextButton(
+              child: Text('Login'),
+              onPressed: () {
+                login();
+              },
+            ),
+            TextButton(
+              child: Text('Criar conta'),
+              onPressed: () {
+                createAccount();
+              },
+            )
+          ],
         ),
       ),
     );
