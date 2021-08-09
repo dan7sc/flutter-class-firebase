@@ -1,3 +1,4 @@
+import 'package:class_firebase/shared/auth/auth_controller.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,7 @@ class _LoginPageState extends State<LoginPage> {
       final response = await FirebaseAuth.instance.signInWithEmailAndPassword(
           email: "test@email.com", password: "asdfjk");
       user = response.user;
+      AuthController.instance.loginUser(user!);
       print('SignInUser: $user');
     } catch (e) {
       print('ErrorSignInUser: $e');
@@ -56,9 +58,8 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<bool> createTransaction() async {
     try {
-      final response = await FirebaseFirestore.instance
-          .collection("/transactions")
-          .add({
+      final response =
+          await FirebaseFirestore.instance.collection("/transactions").add({
         "userId": user?.uid,
         "value": 1000,
         "type": "in",
